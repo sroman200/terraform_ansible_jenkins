@@ -1,0 +1,90 @@
+---
+- name: export PS1 to root/.bash_profile.bash_profile EOF
+  lineinfile:
+    path: /root/.bash_profile
+    line: export PS1='\[\033[00;31m\]\u\[\033[00;32m\]@\H\[\033[00m\]\[\033[01;34m\] \w \$\[\033[00m\]'
+    insertafter: 'EOF'
+    state: present
+  tags:
+  - bash
+  
+- name: export PS1 to centos/.bash_profile.bash_profile EOF
+  lineinfile:
+    path: /home/centos/.bash_profile
+    line: export PS1='\[\033[00;31m\]\u\[\033[00;32m\]@\H\[\033[00m\]\[\033[01;34m\] \w \$\[\033[00m\]'
+    insertafter: 'EOF'
+    state: present
+  tags:
+  - bash
+
+- name: Ensure SELinux is set to permissive mode
+  lineinfile:
+    path: /etc/selinux/config
+    regexp: '^SELINUX='
+    line: SELINUX=permissive
+  tags:
+  - selinux
+
+- name: download jenkins-repo
+  get_url: 
+    url: https://pkg.jenkins.io/redhat-stable/jenkins.repo
+    dest: /etc/yum.repos.d/jenkins.repo
+  
+- name: Import a key from a file
+  rpm_key:
+    state: present
+    key: https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+
+- name: Update repos
+  yum:
+    state: present
+    update_cache: yes
+  tags:
+  - update
+
+- name: Install epel
+  yum:
+    name: epel-release
+    state: latest
+  tags:
+  - epel
+
+- name: Install a list of packages jenkins & java-11-openjdk
+  yum:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - java-11-openjdk
+    - jenkins
+    - bash-completion    
+    - net-tools
+    - bind-utils
+    - vim
+    - deltarpm
+    - iftop
+    - ethtool
+    - wget
+    - curl
+  tags:
+  - install
+
+- name: Enable & start jenkins
+  systemd:
+    name: jenkins
+    state: started
+    enabled: yes
+  notify:
+    - Reload systemd
+  tags:
+    - start
+    - install
+
+- name: Admin passwod
+  command: cat /var/lib/jenkins/secrets/initialAdminPassword
+  register: cat
+  tags:
+    - passout
+
+- debug: var=cat.stdout_lines
+  tags:
+    - passout

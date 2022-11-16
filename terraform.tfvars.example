@@ -1,0 +1,14 @@
+### Yandex.cloud credetials
+cloud_id=""
+folder_id=""
+
+### AWS credetials
+aws_access_key=""
+aws_secret_key=""
+
+zone_name="wx.net" # zone where you create A-record
+dns_name="xxx.wx.net" # fqdn A-record
+path_file_public_key=""
+path_file_private_key=""
+remote_vps_user=""  # centos - default
+image_centos=""
