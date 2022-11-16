@@ -1,3 +1,4 @@
+
 ##### - set up vps in yandex cloud
 ##### - start provisioner with ansible which performs deployment jenkins
 ##### - creates A-record in AWS rout53 for public_ip vps
