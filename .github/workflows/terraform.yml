@@ -15,9 +15,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
     
-    - name: Local folder
-      run: ls -la
-
     - name: Install Terraform
       env:
         TERRAFORM_VERSION: "1.3.4"
