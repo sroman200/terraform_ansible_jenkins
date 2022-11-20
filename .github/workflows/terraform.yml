@@ -8,7 +8,7 @@ jobs:
   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
-    environment: production
+    #environment: production
 
     steps:
     # Checkout the repository to the GitHub Actions runner
